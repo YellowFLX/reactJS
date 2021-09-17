@@ -1,11 +1,9 @@
 import React from 'react'
 import './tags.css'
 
-const TagItem = ({tag, remove}) => {
+const TagItem = ({ tag, remove }) => {
 
-    if (tag === "") {
-        tag='Missed'
-    }
+    if (tag === "") { tag = 'Missed' }
 
     return (
         <div className="tag">
@@ -13,7 +11,6 @@ const TagItem = ({tag, remove}) => {
                 {tag}
             </p>
         </div>
-
     );
 }
 

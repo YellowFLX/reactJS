@@ -5,13 +5,12 @@ import ImgForm from './componets/ImgForm';
 
 function App() {
 
-   
     const [photos, setPhotos] = useState()
+    const [isLoading, setisLoading] = useState(true)
     
     useEffect(()=>{
         fechPhotos()
     },[])
-
 
     async function fechPhotos() {
         setisLoading(true)
@@ -35,9 +34,7 @@ function App() {
         console.log('UPLOADED')
     }
     
-    const [isLoading, setisLoading] = useState(true)
-
-    // Список не добавленных тэгов
+    // Список тегов
     const [list, setList] = useState([
         'Abdomen', 
         'Dorsum', 
@@ -52,22 +49,21 @@ function App() {
         'Upper limb'
     ]);
 
-    // Добавление тэга
+    // Добавление тега
     const addTag = (newTag) => {
         let oldTag = photos[0].tag
         photos[0].tag = newTag
         if (oldTag) setList([...list, oldTag].filter(t => t !== newTag).sort((a, b) => a > b ? 1 : -1))
         else setList(list.filter(t => t !== newTag))
     };
+
     // Удаление тега
     const removeTag = (tag) => {
         if (tag !== 'Missed') {
             setList([...list, tag].sort((a, b) => a.value > b.value ? 1 : -1))            
             photos[0].tag = ""
         }
-
     };
-
 
     return (
         <div className="App">
@@ -80,8 +76,7 @@ function App() {
                     options={list}
                     patchPhoto={patchPhoto}
                     setPhotos={setPhotos}
-                />
-                
+                />  
             }
         </div>
     );

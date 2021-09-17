@@ -11,7 +11,6 @@ const Selection = ({ options, add }) => {
                 )}
             </select>
         </div>
-
     );
 }
 
