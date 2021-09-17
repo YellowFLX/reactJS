@@ -1,51 +1,88 @@
-import React, { useState } from 'react';
-import Selection from './componets/Selection';
-import TagList from './componets/Tags/TagList';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'
 import './app.css'
+import ImgForm from './componets/ImgForm';
 
 function App() {
 
-// Список добавленных тэгов
-    const [tags, setTags] = useState([
-        { id: 1, value: 'black', title: 'Black color' },
-        { id: 2, value: 'white', title: 'White color' },
-        { id: 3, value: 'orange', title: 'Orange color' },
-        { id: 4, value: 'purple', title: 'Purple color' },
-    ]);
+   
+    const [photos, setPhotos] = useState()
+    
+    useEffect(()=>{
+        fechPhotos()
+    },[])
 
-// Списко не добавленных тэгов
+
+    async function fechPhotos() {
+        setisLoading(true)
+        const response = await axios({
+            method: "GET",
+            url: "http://127.0.0.1:8000/api/photos/"
+        }).then(r => r.data.filter(t => t.tag === ""))
+        setPhotos(response)
+        console.log('LOADED')
+        setisLoading(false)
+    }
+
+    async function patchPhoto(photo) {
+        await axios({
+            method: "PATCH",
+            url: "http://127.0.0.1:8000/api/photos/"+photo.id,
+            data: {
+                tag: photo.tag
+              },
+        })
+        console.log('UPLOADED')
+    }
+    
+    const [isLoading, setisLoading] = useState(true)
+
+    // Список не добавленных тэгов
     const [list, setList] = useState([
-        { id: 5, value: 'red', title: 'Red color' },
-        { id: 6, value: 'yellow', title: 'Yellow color' },
-        { id: 7, value: 'green', title: 'Green color' },
-        { id: 8, value: 'blue', title: 'Blue color' },
+        'Abdomen', 
+        'Dorsum', 
+        'Head', 
+        'Inguinal region', 
+        'Lover limb', 
+        'Neck area', 
+        'Pelvis', 
+        'Thorax', 
+        'Throat', 
+        'Undefined', 
+        'Upper limb'
     ]);
 
-// Добавление тэгов
+    // Добавление тэга
     const addTag = (newTag) => {
-        setTags([...tags, newTag].sort((a, b) => a.value > b.value ? 1 : -1))
-        setList(list.filter(t => t.value !== newTag.value))
+        let oldTag = photos[0].tag
+        photos[0].tag = newTag
+        if (oldTag) setList([...list, oldTag].filter(t => t !== newTag).sort((a, b) => a > b ? 1 : -1))
+        else setList(list.filter(t => t !== newTag))
     };
-// Удаление тегов
+    // Удаление тега
     const removeTag = (tag) => {
-        setTags(tags.filter(t => t.value !== tag.value))
-        setList([...list, tag].sort((a, b) => a.value > b.value ? 1 : -1))
+        if (tag !== 'Missed') {
+            setList([...list, tag].sort((a, b) => a.value > b.value ? 1 : -1))            
+            photos[0].tag = ""
+        }
+
     };
 
 
     return (
         <div className="App">
-            <img src='https://via.placeholder.com/600/b0f7cc' alt='colors'></img>
-        {/* Отображение добавленных тэгов */}
-            <TagList
-                remove={removeTag}
-                tags={tags}
-            />
-        {/* Отображение выподающего списка не добавленных тэгов */}
-            <Selection
-                add={addTag}
-                options={list}
-            />
+            {isLoading
+                ? <p>Загрузка</p>
+                : <ImgForm
+                    photos={photos}
+                    remove={removeTag}
+                    add={addTag}
+                    options={list}
+                    patchPhoto={patchPhoto}
+                    setPhotos={setPhotos}
+                />
+                
+            }
         </div>
     );
 };

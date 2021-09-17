@@ -11,7 +11,7 @@
     margin-right: 0em;
     display: inline-block;
     padding: .25em .4em;
-    font-size: 75%;
+    font-size: 100%;
     font-weight: 700;
     line-height: 1;
     text-align: center;
@@ -21,9 +21,6 @@
     color: #fff;
     background-color: #007bff;
     margin-bottom: 0!important;
-}
-
-.taglist{
-    width: 534px;
     text-align: center;
+    
 }

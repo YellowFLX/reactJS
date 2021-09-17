@@ -1,12 +1,16 @@
 import React from 'react'
 import './tags.css'
 
-const TagItem = (props) => {
+const TagItem = ({tag, remove}) => {
+
+    if (tag === "") {
+        tag='Missed'
+    }
 
     return (
         <div className="tag">
-            <p onClick={() => props.remove(props.tag)}>
-                {props.tag.title}
+            <p onClick={() => remove(tag)}>
+                {tag}
             </p>
         </div>
 

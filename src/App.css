@@ -9,6 +9,8 @@
     height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
+    text-align: center
   }
   
   .custom-select {
@@ -25,4 +27,23 @@
     background-color: #007bff;
     color: white;
     outline: none;
+  }
+
+  .uploadbtn{
+    font-family: Arial;
+    box-sizing: border-box;
+    margin-top: 1em;
+    margin-right: 0em;
+    display: inline-block;
+    padding: .25em .4em;
+    font-size: 100%;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    color: #fff;
+    background-color: #007bff;
+    margin-bottom: 0!important;
+    text-align: center;
   }
