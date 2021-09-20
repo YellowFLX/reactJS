@@ -5,49 +5,50 @@ import ImgForm from './componets/ImgForm';
 
 function App() {
 
+    const apiUrl = "http://127.0.0.1:8000/api/photos/"
     const [photos, setPhotos] = useState()
-    const [isLoading, setisLoading] = useState(true)
-    
-    useEffect(()=>{
-        fechPhotos()
-    },[])
+    const [isLoading, setIsLoading] = useState(true)
+    // Список тегов
+    const [list, setList] = useState([
+        'Abdomen',
+        'Dorsum',
+        'Head',
+        'Inguinal region',
+        'Lover limb',
+        'Neck area',
+        'Pelvis',
+        'Thorax',
+        'Throat',
+        'Undefined',
+        'Upper limb'
+    ]);
 
+    useEffect(() => {
+        fechPhotos()
+    }, [])
+
+    //Получение фото без тега
     async function fechPhotos() {
-        setisLoading(true)
+        setIsLoading(true)
         const response = await axios({
             method: "GET",
-            url: "http://127.0.0.1:8000/api/photos/"
+            url: apiUrl
         }).then(r => r.data.filter(t => t.tag === ""))
         setPhotos(response)
         console.log('LOADED')
-        setisLoading(false)
+        setIsLoading(false)
     }
-
+    //Отправка фото
     async function patchPhoto(photo) {
         await axios({
             method: "PATCH",
-            url: "http://127.0.0.1:8000/api/photos/"+photo.id,
+            url: apiUrl + photo.id,
             data: {
                 tag: photo.tag
-              },
+            },
         })
         console.log('UPLOADED')
     }
-    
-    // Список тегов
-    const [list, setList] = useState([
-        'Abdomen', 
-        'Dorsum', 
-        'Head', 
-        'Inguinal region', 
-        'Lover limb', 
-        'Neck area', 
-        'Pelvis', 
-        'Thorax', 
-        'Throat', 
-        'Undefined', 
-        'Upper limb'
-    ]);
 
     // Добавление тега
     const addTag = (newTag) => {
@@ -60,7 +61,7 @@ function App() {
     // Удаление тега
     const removeTag = (tag) => {
         if (tag !== 'Missed') {
-            setList([...list, tag].sort((a, b) => a.value > b.value ? 1 : -1))            
+            setList([...list, tag].sort((a, b) => a.value > b.value ? 1 : -1))
             photos[0].tag = ""
         }
     };
@@ -68,15 +69,16 @@ function App() {
     return (
         <div className="App">
             {isLoading
-                ? <p>Загрузка</p>
+                ? <p>Loading</p>
                 : <ImgForm
                     photos={photos}
+                    options={list}
                     remove={removeTag}
                     add={addTag}
-                    options={list}
                     patchPhoto={patchPhoto}
                     setPhotos={setPhotos}
-                />  
+                    fetchPhoto={fechPhotos}
+                />
             }
         </div>
     );

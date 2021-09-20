@@ -3,11 +3,11 @@ import React from 'react'
 const Selection = ({ options, add }) => {
 
     return (
-        <div>
-            <select onChange={event => add(event.target.value)}>
-                <option selected >Tags</option>
+        <div className="Selection">
+            <select title="Select tag" onChange={event => add(event.target.value)}>
+                <option>Tags</option>
                 {options.map((item, index) =>
-                    <option value={item} key={item}>{item}</option>
+                    <option value={item} key={index}>{item}</option>
                 )}
             </select>
         </div>

@@ -1,20 +1,23 @@
 import React from 'react'
 import Selection from './Selection';
-import TagItem from './Tags/TagItem';
+import TagItem from './TagItem';
 
-const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos }) => {
+const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos, fetchPhoto }) => {
     if (photos.length === 0) {
         return (
             <div className="photo">
-                Фото без тега не найдены
+                <p>Photos without a tag not found</p>
+                <button className="btn" onClick={fetchPhoto}>Reload</button>
             </div>
+
         )
     }
+
     let photo = photos[0]
     let photoURL = "https://via.placeholder.com/600/" + photo.photo.slice(0, 6)
 
     return (
-        <div>
+        <div className="ImgForm">
             <img src={photoURL} alt="" />
             <p>{photo.photo}</p>
             <TagItem
@@ -26,7 +29,7 @@ const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos }) => {
                 options={options}
             />
             <button
-                className="uploadbtn"
+                className="btn"
                 onClick={() => {
                     patchPhoto(photos[0])
                     remove(photo.tag)
@@ -34,8 +37,6 @@ const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos }) => {
                 }}
             >Save</button>
         </div>
-
-
     );
 }
 
