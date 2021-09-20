@@ -66,5 +66,5 @@ select {
 
 .btn:active {
   transform: translateY(-1px);
-  box-shadow: 0 0px 10px #01458d;
+  box-shadow: 0 0px 11px #01458d;
 }
