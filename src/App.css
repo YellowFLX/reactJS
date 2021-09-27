@@ -12,7 +12,9 @@ body {
   align-items: center;
   text-align: center
 }
-
+p{
+  font-size: 1.1rem;
+}
 .custom-select {
   position: relative;
 }
@@ -69,7 +71,9 @@ select {
   box-shadow: 0 0px 11px #01458d;
 }
 img{
-  filter: blur(1em);
+  /* Размытие для тестирования */
+  filter: blur(1em); 
   width: 479px;
   height: 360px;
+  margin-bottom: 0.3rem;
 }

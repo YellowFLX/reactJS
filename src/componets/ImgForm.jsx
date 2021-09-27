@@ -2,9 +2,12 @@ import React, { useEffect } from 'react'
 import Selection from './Selection';
 import TagItem from './TagItem';
 
-const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos, imagePhoto, fetchImage, fetchPhotos}) => {
+const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos, imagePhoto, fetchImage, fetchPhotos, diseaseTitle, fetchDiseaseTitle}) => {
     useEffect(() => {
-        if (photos.length)fetchImage(photo.photo)  // eslint-disable-next-line react-hooks/exhaustive-deps
+        if (photos.length){
+            fetchImage(photo.photo)
+            fetchDiseaseTitle(photo.diseaseId)
+        }  // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [photos[0]])
 
     if (photos.length === 0) {
@@ -22,7 +25,7 @@ const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos, imagePho
     return (
         <div className="ImgForm">
             <img src={imagePhoto} alt="" />
-            <p>{photo.photo}</p>
+            <p>{diseaseTitle}</p>
             <TagItem
                 tag={photo.tag}
                 remove={remove}

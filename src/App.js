@@ -9,6 +9,7 @@ function App() {
     const [photos, setPhotos] = useState()
     const [tags, setTags] = useState([''])
     const [imagePhoto, setImagePhoto] = useState()
+    const [diseaseTitle, setDiseaseTitle] = useState('')
     const [isLoading, setIsLoading] = useState(true)
     const [isImageLoading, setIsImageLoading] = useState(true)
     const targetTag = ""
@@ -28,7 +29,7 @@ function App() {
                 username: "tester",
                 password: "test123"
             }
-        }).then(r => r.data.filter(t => t.tag === ""))
+        }).then(r => r.data.filter(t => t.tag === targetTag))
         setPhotos(response)
         console.log('LOADED')
         setIsLoading(false)
@@ -44,7 +45,7 @@ function App() {
                 password: "test123"
             }
         }).then(r => r.data.map(a => a.position))
-        setTags([...new Set(response)].filter(t => t !== targetTag).sort((a, b) => a > b ? 1 : -1))
+        setTags([...new Set(response)].filter(t => t !== "").sort((a, b) => a > b ? 1 : -1))
     }
 
     // Отправка измененного тега фото
@@ -81,6 +82,19 @@ function App() {
         console.log('PH')
     }
 
+    async function fetchDiseaseTitle(diseaseId) {
+        const response = await axios({
+            method: "GET",
+            url: `${apiBaseUrl}/disease/${diseaseId}`,
+            auth: {
+                username: "tester",
+                password: "test123"
+            }
+        }).then(r => r.data.title)
+        setDiseaseTitle(response)
+        console.log('LOADED')
+    }
+
     // Добавление тега
     const addTag = (newTag) => {
         let oldTag = photos[0].tag
@@ -107,10 +121,12 @@ function App() {
                     options={tags}
                     remove={removeTag}
                     add={addTag}
-                    patchPhoto={patchPhoto}
                     setPhotos={setPhotos}
-                    fetchImage={fetchImage}
+                    patchPhoto={patchPhoto}
                     fetchPhotos={fetchPhotos}
+                    diseaseTitle={diseaseTitle}
+                    fetchDiseaseTitle={fetchDiseaseTitle}
+                    fetchImage={fetchImage}
                     imagePhoto={imagePhoto}
                     isImageLoading={isImageLoading}
                     setIsImageLoading={setIsImageLoading}
