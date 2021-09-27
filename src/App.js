@@ -11,6 +11,7 @@ function App() {
     const [imagePhoto, setImagePhoto] = useState()
     const [isLoading, setIsLoading] = useState(true)
     const [isImageLoading, setIsImageLoading] = useState(true)
+    const targetTag = ""
 
     useEffect(() => {
         fetchPhotos()
@@ -43,7 +44,7 @@ function App() {
                 password: "test123"
             }
         }).then(r => r.data.map(a => a.position))
-        setTags([...new Set(response)].filter(t => t !== "").sort((a, b) => a > b ? 1 : -1))
+        setTags([...new Set(response)].filter(t => t !== targetTag).sort((a, b) => a > b ? 1 : -1))
     }
 
     // Отправка измененного тега фото
