@@ -1,24 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Selection from './Selection';
 import TagItem from './TagItem';
 
-const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos, fetchPhoto }) => {
+const ImgForm = ({ photos, options, add, remove, patchPhoto, setPhotos, imagePhoto, fetchImage, fetchPhotos}) => {
+    useEffect(() => {
+        if (photos.length)fetchImage(photo.photo)  // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [photos[0]])
+
     if (photos.length === 0) {
         return (
             <div className="photo">
                 <p>Photos without a tag not found</p>
-                <button className="btn" onClick={fetchPhoto}>Reload</button>
+                <button className="btn" onClick={fetchPhotos}>Reload</button>
             </div>
-
         )
     }
 
     let photo = photos[0]
-    let photoURL = "https://via.placeholder.com/600/" + photo.photo.slice(0, 6)
-
+    console.log(photos[0])
+    
     return (
         <div className="ImgForm">
-            <img src={photoURL} alt="" />
+            <img src={imagePhoto} alt="" />
             <p>{photo.photo}</p>
             <TagItem
                 tag={photo.tag}

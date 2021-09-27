@@ -5,7 +5,7 @@ const Selection = ({ options, add }) => {
     return (
         <div className="Selection">
             <select title="Select tag" onChange={event => add(event.target.value)}>
-                <option>Tags</option>
+                <option id="010" hidden>Tags</option>
                 {options.map((item, index) =>
                     <option value={item} key={index}>{item}</option>
                 )}

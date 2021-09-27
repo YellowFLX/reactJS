@@ -4,64 +4,95 @@ import './App.css'
 import ImgForm from './componets/ImgForm';
 
 function App() {
-
-    const apiUrl = "http://127.0.0.1:8000/api/photos/"
+    const apiBaseUrl = "/api"
+    const imagesUrl = "/photo"
     const [photos, setPhotos] = useState()
+    const [tags, setTags] = useState([''])
+    const [imagePhoto, setImagePhoto] = useState()
     const [isLoading, setIsLoading] = useState(true)
-    // Список тегов
-    const [list, setList] = useState([
-        'Abdomen',
-        'Dorsum',
-        'Head',
-        'Inguinal region',
-        'Lover limb',
-        'Neck area',
-        'Pelvis',
-        'Thorax',
-        'Throat',
-        'Undefined',
-        'Upper limb'
-    ]);
+    const [isImageLoading, setIsImageLoading] = useState(true)
 
     useEffect(() => {
-        fechPhotos()
+        fetchPhotos()
+        fetchTags()
     }, [])
 
-    //Получение фото без тега
-    async function fechPhotos() {
+    // Получение фото без тега
+    async function fetchPhotos() {
         setIsLoading(true)
         const response = await axios({
             method: "GET",
-            url: apiUrl
+            url: `${apiBaseUrl}/photo/`,
+            auth: {
+                username: "tester",
+                password: "test123"
+            }
         }).then(r => r.data.filter(t => t.tag === ""))
         setPhotos(response)
         console.log('LOADED')
         setIsLoading(false)
     }
-    //Отправка фото
+
+    // Получение списка тегов
+    async function fetchTags() {
+        const response = await axios({
+            method: "GET",
+            url: `${apiBaseUrl}/organ/`,
+            auth: {
+                username: "tester",
+                password: "test123"
+            }
+        }).then(r => r.data.map(a => a.position))
+        setTags([...new Set(response)].filter(t => t !== "").sort((a, b) => a > b ? 1 : -1))
+    }
+
+    // Отправка измененного тега фото
     async function patchPhoto(photo) {
         await axios({
-            method: "PATCH",
-            url: apiUrl + photo.id,
+            method: "PUT",
+            url: `${apiBaseUrl}/photo/update`,
             data: {
+                photoId: photo.photo,
                 tag: photo.tag
             },
+            auth: {
+                username: "tester",
+                password: "test123"
+            }
         })
         console.log('UPLOADED')
+    }
+
+    // Получение фото
+    async function fetchImage(photoId) {
+        setImagePhoto('')
+        const response = await axios({
+            method: "GET",
+            url: `${imagesUrl}/${photoId}`,
+            auth: {
+                username: "tester",
+                password: "test123"
+            },
+            responseType: 'arraybuffer'
+        })
+            .then(r => ("data:image/png;base64," + Buffer.from(r.data, 'binary').toString('base64')))
+        setImagePhoto(response)
+        console.log('PH')
     }
 
     // Добавление тега
     const addTag = (newTag) => {
         let oldTag = photos[0].tag
         photos[0].tag = newTag
-        if (oldTag) setList([...list, oldTag].filter(t => t !== newTag).sort((a, b) => a > b ? 1 : -1))
-        else setList(list.filter(t => t !== newTag))
+        if (oldTag) setTags([...tags, oldTag].filter(t => t !== newTag).sort((a, b) => a > b ? 1 : -1))
+        else setTags(tags.filter(t => t !== newTag).sort((a, b) => a > b ? 1 : -1))
+        document.getElementById('010').selected = true
     };
 
     // Удаление тега
     const removeTag = (tag) => {
-        if (tag !== 'Missed') {
-            setList([...list, tag].sort((a, b) => a.value > b.value ? 1 : -1))
+        if (tag !== 'Missed' && !(tags.includes(tag)) && tag !== '') {
+            setTags([...tags, tag].sort((a, b) => a > b ? 1 : -1))
             photos[0].tag = ""
         }
     };
@@ -72,12 +103,16 @@ function App() {
                 ? <p>Loading</p>
                 : <ImgForm
                     photos={photos}
-                    options={list}
+                    options={tags}
                     remove={removeTag}
                     add={addTag}
                     patchPhoto={patchPhoto}
                     setPhotos={setPhotos}
-                    fetchPhoto={fechPhotos}
+                    fetchImage={fetchImage}
+                    fetchPhotos={fetchPhotos}
+                    imagePhoto={imagePhoto}
+                    isImageLoading={isImageLoading}
+                    setIsImageLoading={setIsImageLoading}
                 />
             }
         </div>
