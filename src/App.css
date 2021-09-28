@@ -69,10 +69,8 @@ select {
 .btn:active {
   transform: translateY(-1px);
   box-shadow: 0 0px 11px #01458d;
-}
+}   
 img{
-  /* Размытие для тестирования */
-  filter: blur(1em); 
   width: 479px;
   height: 360px;
   margin-bottom: 0.3rem;
